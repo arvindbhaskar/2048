@@ -140,6 +140,7 @@ GameManager.prototype.moveTile = function (tile, cell) {
     var traversals = this.buildTraversals(vector);
     var moved      = false;
     var didMerge   = false;
+    var mergedValue = 0;
 
     // Save the current tile positions and remove merger information
     this.prepareTiles();
@@ -175,6 +176,7 @@ GameManager.prototype.moveTile = function (tile, cell) {
             }
             
             didMerge = true;
+            mergedValue = merged.value;
           } else {
             self.moveTile(tile, positions.farthest);
           }
@@ -187,21 +189,30 @@ GameManager.prototype.moveTile = function (tile, cell) {
     });
 
     if (moved) {
-      if (didMerge) {
-        this.soundManager.playMerge();
-      } else {
-        this.soundManager.playMove();
-      }
-      
       this.addRandomTile();
-      this.soundManager.playNewTile();
 
       if (!this.movesAvailable()) {
         this.over = true; // Game over!
-        this.soundManager.playGameOver();
-      } else if (this.justWon) {
-        this.soundManager.playWin();
-        this.justWon = false;
+      }
+
+      // Sound effects should never be able to break the game if audio fails
+      try {
+        if (didMerge) {
+          this.soundManager.playMerge(mergedValue);
+        } else {
+          this.soundManager.playMove();
+        }
+
+        this.soundManager.playNewTile();
+
+        if (this.over) {
+          this.soundManager.playGameOver();
+        } else if (this.justWon) {
+          this.soundManager.playWin();
+          this.justWon = false;
+        }
+      } catch (e) {
+        // Ignore sound errors
       }
 
       this.actuate();
