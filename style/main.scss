@@ -325,6 +325,9 @@ hr {
     background: rgba($text-color, 0.05);
     border: 1px solid rgba($text-color, 0.2);
     box-shadow: inset 0 0 10px rgba($text-color, 0.1);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 
     &:last-child {
       margin-right: 0;
@@ -375,6 +378,9 @@ hr {
     box-shadow: 0 0 15px rgba($text-color, 0.4);
     color: $text-color;
     text-shadow: 0 0 10px $text-color;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
 
   // Movement transition
